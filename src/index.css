@@ -1,0 +1,448 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Font Face for Pricedown */
+@font-face {
+  font-family: 'Pricedown';
+  src: url('/fonts/pricedown.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    /* GTA V Color System */
+    --gta-black: #0d1116;
+    --gta-graphite: #1c1d21;
+    --gta-dark: #32383d;
+    --gta-medium: #454b4f;
+    --gta-light: #979a97;
+    --gta-white: #ffffff;
+    --gta-green: #47761E;
+    --gta-gold: #FED985;
+    --gta-blue: #61B5CB;
+    --gta-salmon: #F09E71;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-gta-black text-white font-inter;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bebas tracking-wide;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gta-black;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gta-medium rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gta-light;
+  }
+}
+
+@layer components {
+  /* Container */
+  .container-gta {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Typography */
+  .heading-gta {
+    @apply font-bebas text-white tracking-wider;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .text-gold {
+    @apply text-gta-gold;
+  }
+
+  /* Buttons */
+  .btn-gta {
+    @apply px-8 py-3 font-inter font-medium uppercase tracking-wider transition-all duration-300;
+    @apply bg-gta-green text-white hover:bg-opacity-90;
+    @apply shadow-gta hover:shadow-gta-hover;
+    letter-spacing: 0.1em;
+  }
+
+  .btn-gta-outline {
+    @apply px-8 py-3 font-inter font-medium uppercase tracking-wider transition-all duration-300;
+    @apply border-2 border-gta-green text-gta-green hover:bg-gta-green hover:text-white;
+    letter-spacing: 0.1em;
+  }
+
+  .btn-gta-gold {
+    @apply px-8 py-3 font-inter font-medium uppercase tracking-wider transition-all duration-300;
+    @apply bg-gta-gold text-gta-black hover:bg-opacity-90;
+    @apply shadow-gta hover:shadow-gta-hover;
+    letter-spacing: 0.1em;
+  }
+
+  /* Cards */
+  .card-gta {
+    @apply bg-gta-graphite backdrop-blur-sm p-6 transition-all duration-300;
+    @apply shadow-card hover:shadow-card-hover;
+    @apply hover:-translate-y-1;
+  }
+
+  /* Glass Effect */
+  .glass-gta {
+    @apply backdrop-blur-lg bg-gta-black/95;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Loading Bar */
+  .loading-bar {
+    @apply h-1 bg-gta-gold;
+    animation: loading 2s ease-in-out infinite;
+  }
+
+  @keyframes loading {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+  }
+
+  /* Progress Bar */
+  .progress-bar {
+    @apply relative h-2 bg-gta-dark overflow-hidden;
+  }
+
+  .progress-bar::after {
+    content: '';
+    @apply absolute inset-0 bg-loading-gradient;
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* GTA Menu Style */
+  .menu-gta {
+    @apply bg-gta-graphite/95 backdrop-blur-md;
+    border-left: 4px solid var(--gta-green);
+  }
+
+  .menu-item-gta {
+    @apply px-6 py-3 text-white/80 hover:text-white hover:bg-gta-dark/50;
+    @apply transition-all duration-200 cursor-pointer;
+    @apply border-l-4 border-transparent hover:border-gta-gold;
+    margin-left: -4px;
+  }
+
+  .menu-item-active {
+    @apply text-white bg-gta-dark/50 border-gta-gold;
+  }
+
+  /* Stats Display */
+  .stat-label {
+    @apply text-gta-light text-sm uppercase tracking-wider;
+  }
+
+  .stat-value {
+    @apply text-white text-2xl font-rajdhani font-bold;
+  }
+
+  /* Divider */
+  .divider-gta {
+    @apply h-px bg-gradient-to-r from-transparent via-gta-medium to-transparent my-8;
+  }
+
+  /* Badge */
+  .badge-gta {
+    @apply inline-flex items-center px-3 py-1 text-xs font-medium uppercase tracking-wider;
+    @apply bg-gta-green/20 text-gta-green border border-gta-green/30;
+  }
+
+  .badge-gold {
+    @apply bg-gta-gold/20 text-gta-gold border-gta-gold/30;
+  }
+
+  /* Smooth Animations */
+  .animate-smooth {
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Loading Screen Style */
+  .loading-screen {
+    @apply fixed inset-0 bg-gta-black z-50 flex items-center justify-center;
+  }
+
+  .loading-content {
+    @apply text-center;
+  }
+
+  .loading-logo {
+    @apply text-6xl font-pricedown text-white mb-8;
+    animation: fadeIn 1s ease-out;
+  }
+
+  .loading-tips {
+    @apply text-gta-light text-sm max-w-md mx-auto;
+    animation: fadeIn 1s ease-out 0.5s both;
+  }
+
+  /* Hover Effects */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+
+  /* Section Spacing */
+  .section-padding {
+    @apply py-20 md:py-32;
+  }
+
+  /* Grid Layouts */
+  .grid-gta {
+    @apply grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  /* Text Styles */
+  .text-muted {
+    @apply text-gta-light;
+  }
+
+  .text-accent {
+    @apply text-gta-gold;
+  }
+
+  /* Input Styles */
+  .input-gta {
+    @apply w-full px-4 py-3 bg-gta-graphite border border-gta-medium;
+    @apply focus:border-gta-green focus:outline-none focus:ring-1 focus:ring-gta-green;
+    @apply text-white placeholder-gta-light;
+    @apply transition-all duration-200;
+  }
+
+  /* Select Style */
+  .select-gta {
+    @apply input-gta appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23979a97'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+}
+
+@layer utilities {
+  /* Smooth Scroll */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+
+  /* No Scrollbar */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Text Shadow */
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Gradient Text */
+  .gradient-gold {
+    @apply bg-gradient-to-r from-gta-gold via-yellow-300 to-gta-gold bg-clip-text text-transparent;
+  }
+
+  .gradient-green {
+    @apply bg-gradient-to-r from-gta-green via-green-500 to-gta-olive bg-clip-text text-transparent;
+  }
+
+  /* Image optimization */
+  img {
+    @apply max-w-full h-auto;
+  }
+  
+  /* Lazy loading background */
+  img[loading="lazy"] {
+    @apply bg-gta-graphite;
+  }
+
+  /* Image hover effects */
+  .img-zoom {
+    @apply transition-transform duration-500 hover:scale-110;
+  }
+
+  /* Mobile Touch Feedback */
+  .touch-ripple {
+    @apply absolute inset-0 rounded-lg;
+    background: radial-gradient(circle, rgba(254, 217, 133, 0.3) 0%, transparent 70%);
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  a:active .touch-ripple,
+  button:active .touch-ripple {
+    animation: ripple 0.4s ease-out;
+  }
+
+  @keyframes ripple {
+    0% {
+      transform: scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+
+  /* Bounce in animation */
+  .animate-bounce-in {
+    animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  @keyframes bounceIn {
+    0% {
+      transform: translateX(-50%) translateY(100%);
+      opacity: 0;
+    }
+    60% {
+      transform: translateX(-50%) translateY(-10%);
+    }
+    100% {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* Fade out animation */
+  .animate-fade-out {
+    animation: fadeOut 0.3s ease-out forwards;
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 1023px) {
+    /* Adjust body padding for fixed navigation */
+    body {
+      padding-top: 0;
+      padding-bottom: 88px;
+    }
+
+    /* Touch-friendly tap targets */
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Prevent horizontal scroll */
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+
+    /* Improve readability on mobile */
+    .container-gta {
+      @apply px-4;
+    }
+
+    /* Adjust heading sizes for mobile */
+    h1 {
+      @apply text-4xl;
+    }
+
+    h2 {
+      @apply text-3xl;
+    }
+
+    h3 {
+      @apply text-2xl;
+    }
+
+    /* Mobile-optimized cards */
+    .card-gta {
+      @apply p-4;
+    }
+
+    /* Reduce section padding on mobile */
+    .section-padding {
+      @apply py-12;
+    }
+  }
+
+  /* Safe area insets for notched devices */
+  @supports (padding: env(safe-area-inset-bottom)) {
+    .bottom-navigation {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .mobile-top-bar {
+      padding-top: env(safe-area-inset-top);
+    }
+  }
+
+  /* Smooth scrolling with reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out forwards;
+}

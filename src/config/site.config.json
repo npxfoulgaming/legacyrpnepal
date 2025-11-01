@@ -1,0 +1,354 @@
+{
+  "seo": {
+    "title": "Legacy Roleplay Nepal - Fivem Server",
+    "shortTitle": "Legacy Roleplay Nepal",
+    "description": "Join the most immersive GTA V FiveM roleplay server. Custom framework, active community, realistic economy, and endless roleplay possibilities. Apply for whitelist today!",
+    "keywords": [
+      "FiveM", 
+      "GTA V", 
+      "Roleplay", 
+      "RP Server", 
+      "GTA Roleplay", 
+      "FiveM Server", 
+      "Gaming Community",
+      "Los Santos",
+      "Whitelist Server"
+    ],
+    "ogImage": "/images/og-image.jpg",
+    "twitterCard": "summary_large_image",
+    "twitterHandle": "@legacyrpnepal",
+    "favicon": "/favicon.ico",
+    "themeColor": "#FF0000",
+    "locale": "en_US",
+    "url": "https://legacyrpnepal.com"
+  },
+  "legal": {
+    "companyName": "Legacy Roleplay Nepal",
+    "email": "contact@nightcity-rp.com",
+    "privacyEmail": "privacy@nightcity-rp.com",
+    "dpoEmail": "dpo@nightcity-rp.com",
+    "supportEmail": "support@nightcity-rp.com",
+    "lastUpdated": "2025-01-01",
+    "minAge": 16,
+    "copyrightYear": 2025,
+    "dataRetention": {
+      "characterData": "6 months of inactivity",
+      "chatLogs": "30 days",
+      "connectionLogs": "90 days",
+      "banRecords": "Permanently",
+      "whitelistApplications": "1 year"
+    }
+  },
+  "server": {
+    "name": "Legacy Roleplay Nepal",
+    "tagline": "Where Stories Come Alive",
+    "description": "Experience the most immersive GTA V roleplay server with custom features, active community, and endless possibilities.",
+    "ip": "139.162.49.4",
+    "port": "30126",
+    "connecttext": "connect",
+    "discord": "https://discord.gg/xQDW7GtREZ",
+    "maxPlayers": 256,
+    "logo": {
+      "type": "image",
+      "content": "https://i.ibb.co/MDPjP1sr/96x96.png",
+      "_comment": "type can be 'text' or 'image'. For text: content is the letters. For image: content is the path/URL"
+    },
+    "loadingTips": [
+      "Remember to stay in character at all times",
+      "Press F1 to open the help menu",
+      "Join our Discord for the latest updates",
+      "Quality roleplay is always rewarded"
+    ]
+  },
+  "features": [
+    {
+      "id": "custom-framework",
+      "title": "Custom Framework",
+      "description": "Built from scratch for optimal performance",
+      "icon": "Code2"
+    },
+    {
+      "id": "voice-chat",
+      "title": "Advanced Voice Chat",
+      "description": "Crystal clear proximity voice with radio systems",
+      "icon": "Mic"
+    },
+    {
+      "id": "economy",
+      "title": "Dynamic Economy",
+      "description": "Player-driven market with realistic pricing",
+      "icon": "DollarSign"
+    },
+    {
+      "id": "housing",
+      "title": "Housing System",
+      "description": "Own properties and customize your space",
+      "icon": "Home"
+    },
+    {
+      "id": "vehicles",
+      "title": "300+ Vehicles",
+      "description": "Custom cars with realistic handling",
+      "icon": "Car"
+    },
+    {
+      "id": "events",
+      "title": "Weekly Events",
+      "description": "Community events with exclusive rewards",
+      "icon": "Calendar"
+    }
+  ],
+  "gallery": {
+    "images": [
+      { 
+        "id": 1, 
+        "src": "/images/gallery/1.jpg", 
+        "alt": "City skyline at night", 
+        "title": "Downtown Los Santos",
+        "category": "locations"
+      },
+      { 
+        "id": 2, 
+        "src": "/images/gallery/2.jpg", 
+        "alt": "Police chase scene", 
+        "title": "High Speed Chase",
+        "category": "action"
+      },
+      { 
+        "id": 3, 
+        "src": "/images/gallery/3.jpg", 
+        "alt": "Car meet event", 
+        "title": "Weekly Car Meet",
+        "category": "events"
+      },
+      { 
+        "id": 4, 
+        "src": "/images/gallery/4.jpg", 
+        "alt": "Racing event", 
+        "title": "Street Racing",
+        "category": "events"
+      },
+      { 
+        "id": 5, 
+        "src": "/images/gallery/5.jpg", 
+        "alt": "Roleplay scenario", 
+        "title": "Bank Heist RP",
+        "category": "roleplay"
+      },
+      { 
+        "id": 6, 
+        "src": "/images/gallery/6.jpg", 
+        "alt": "Community gathering", 
+        "title": "Community Event",
+        "category": "events"
+      },
+      { 
+        "id": 7, 
+        "src": "/images/gallery/7.jpg", 
+        "alt": "Custom vehicles", 
+        "title": "Custom Rides",
+        "category": "vehicles"
+      },
+      { 
+        "id": 8, 
+        "src": "/images/gallery/8.jpg", 
+        "alt": "Server event", 
+        "title": "Special Event",
+        "category": "events"
+      }
+    ]
+  },
+  "jobs": {
+    "categories": [
+      {
+        "id": "emergency",
+        "name": "Emergency Services",
+        "color": "red"
+      },
+      {
+        "id": "civilian",
+        "name": "Civilian",
+        "color": "blue"
+      },
+      {
+        "id": "criminal",
+        "name": "Criminal",
+        "color": "purple"
+      },
+      {
+        "id": "business",
+        "name": "Business",
+        "color": "green"
+      }
+    ],
+    
+  "list": [
+    {
+      "id": "police",
+      "name": "Police Officer",
+      "category": "emergency",
+      "description": "Protect and serve the city",
+      "requirements": ["18+ years old", "Clean record", "Interview required"],
+      "image": "/images/jobs/police.jpg",
+      "website": "/police/index.html",
+      "apply_url": "/apply/police"
+    },
+    {
+      "id": "ems",
+      "name": "Paramedic",
+      "category": "emergency",
+      "description": "Save lives and provide medical care",
+      "requirements": ["16+ years old", "Medical training", "Active player"],
+      "image": "/images/jobs/ems.jpg",
+      "website": "/ems/index.html",
+      "apply_url": "/apply/ems"
+    },
+    {
+      "id": "mechanic",
+      "name": "Mechanic",
+      "category": "civilian",
+      "description": "Repair and customize vehicles",
+      "requirements": ["No requirements", "Training provided"],
+      "image": "/images/jobs/mechanic.jpg",
+      "website": "/mechanic/index.html",
+      "apply_url": "/apply/mechanic"
+    },
+    {
+      "id": "taxi",
+      "name": "Taxi Driver",
+      "category": "civilian",
+      "description": "Transport citizens around the city",
+      "requirements": ["Valid license", "Clean driving record"],
+      "image": "/images/jobs/taxi.jpg",
+      "website": "/taxi/index.html",
+      "apply_url": "/apply/taxi"
+    },
+    {
+      "id": "dealer",
+      "name": "Drug Dealer",
+      "category": "criminal",
+      "description": "Distribute illegal substances",
+      "requirements": ["Street reputation", "Gang affiliation"],
+      "image": "/images/jobs/dealer.jpg",
+      "website": "/dealer/index.html",
+      "apply_url": "/apply/dealer"
+    },
+    {
+      "id": "lawyer",
+      "name": "Lawyer",
+      "category": "business",
+      "description": "Represent clients in legal matters",
+      "requirements": ["Bar exam", "Good standing"],
+      "image": "/images/jobs/lawyer.jpg",
+      "website": "/lawyer/index.html",
+      "apply_url": "/apply/lawyer"
+    }
+  ]
+  },
+  "rules": [
+    {
+      "id": "rdm",
+      "title": "No Random Deathmatch (RDM)",
+      "description": "Killing without valid roleplay reason is prohibited"
+    },
+    {
+      "id": "vdm",
+      "title": "No Vehicle Deathmatch (VDM)",
+      "description": "Using vehicles as weapons without RP is not allowed"
+    },
+    {
+      "id": "metagaming",
+      "title": "No Metagaming",
+      "description": "Using out-of-character information in-character is forbidden"
+    },
+    {
+      "id": "powergaming",
+      "title": "No Powergaming",
+      "description": "Forcing actions on others without giving them a chance to respond"
+    },
+    {
+      "id": "respect",
+      "title": "Respect Everyone",
+      "description": "Treat all players and staff with respect"
+    }
+  ],
+  "team": [
+    {
+      "id": "npxfoulgaming",
+      "name": "FouL Gaming",
+      "role": "Server Overwatcher",
+      "avatar": "/images/team/avatar1.jpg",
+      "discord": "npxfoulgaming",
+      "description": "Overwatcher and Manager"
+    },
+    {
+      "id": "jane-smith",
+      "name": "Jane Smith",
+      "role": "Head Admin",
+      "avatar": "/images/team/avatar2.jpg",
+      "discord": "janesmith",
+      "description": "Community management and support"
+    },
+    {
+      "id": "mike-wilson",
+      "name": "Mike Wilson",
+      "role": "Developer",
+      "avatar": "/images/team/avatar3.jpg",
+      "discord": "mikewilson",
+      "description": "Backend systems and optimization"
+    },
+    {
+      "id": "sarah-jones",
+      "name": "Sarah Jones",
+      "role": "Moderator",
+      "avatar": "/images/team/avatar4.jpg",
+      "discord": "sarahjones",
+      "description": "Player support and moderation"
+    }
+  ],
+  "api": {
+    "serverCode": "5dp887",
+    "cfxApiUrl": "https://servers-frontend.fivem.net/api/servers/single/",
+    "refreshInterval": 30000,
+    "_comment": "Get your serverCode from https://servers.fivem.net - search your server and copy the ID from URL"
+  },
+  "social": {
+    "discord": "https://discord.gg/xQDW7GtREZ",
+    "twitter": "https://twitter.com/legacyrpnepal",
+    "youtube": "https://youtube.com/@legacyrpnepal",
+    "tiktok": "https://tiktok.com/@legacyrpnepal",
+    "instagram": "https://instagram.com/legacyrpnepal",
+    "twitch": "https://twitch.tv/legacyrpnepal"
+  },
+  "whitelist": {
+    "enabled": true,
+    "applicationUrl": "https://apply.legacyrpnepal.com",
+    "requirements": [
+      "Minimum age of 16 years",
+      "Working microphone",
+      "Read and understand server rules",
+      "Pass character backstory review"
+    ]
+  },
+  "donations": {
+    "enabled": true,
+    "currency": "USD",
+    "packages": [
+      {
+        "name": "Supporter",
+        "price": 5,
+        "perks": ["Priority Queue", "Supporter Tag"]
+      },
+      {
+        "name": "VIP",
+        "price": 15,
+        "perks": ["Priority Queue", "VIP Tag", "Extra Character Slot", "Custom Plate"]
+      },
+      {
+        "name": "Elite",
+        "price": 30,
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"]
+      }
+    ]
+  }
+}
