@@ -189,7 +189,7 @@ console.log("Member info:", guildMember);
 
     console.log("Guild member info:", guildMember);
 
-    res.redirect("https://legacyrpnepal.vercel.app"); // frontend
+    res.redirect("http://localhost:5173"); // frontend
   } catch (err: unknown) {
     if (isAxiosError(err)) console.error("Axios error:", err.response?.data ?? err.message);
     else if (err instanceof Error) console.error("Error:", err.message);
