@@ -40,4 +40,4 @@ console.log("DISCORD_REDIRECT_URI:", process.env.DISCORD_REDIRECT_URI);
 
 // Start server
 const PORT = Number(process.env.PORT) || 4000;
-app.listen(PORT, () => console.log(`Server running on https://api.legacyrpnepal.vercel.app`));
+app.listen(PORT, () => console.log(`Server running on https://legacyrpnepal.vercel.app`));

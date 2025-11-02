@@ -1,7 +1,7 @@
 {
   "name": "legacy-rp-nepal-website",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "npm run build && npx gh-pages -d dist"
+    "deploy": "npm run build && npx gh-pages -d dist",
+    "start": "node build/server/index.js"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -24,7 +25,6 @@
     "gsap": "^3.13.0",
     "lucide-react": "^0.540.0",
     "mysql2": "^3.15.3",
-    "next-auth": "^4.24.13",
     "postcss": "^8.5.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
