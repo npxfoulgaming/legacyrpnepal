@@ -21,12 +21,22 @@ export const Footer = () => {
           {/* Server Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gta-green flex items-center justify-center">
-                <span className="font-bebas text-xl text-white">RP</span>
-              </div>
-              <span className="font-bebas text-2xl text-white">
-                {siteConfig.server.name}
+            {/* Logo */}
+            <div className="flex items-center gap-2 md:gap-3 opacity-100 animate-fade-in">
+              {siteConfig.server.logo.type === "text" ? (
+                <div className="w-9 h-9 md:w-10 md:h-10 bg-gta-green flex items-center justify-center">
+                  <span className="font-bebas text-lg md:text-xl text-white">{siteConfig.server.logo.content}</span>
+                </div>
+              ) : (
+                <div className="w-9 h-9 md:w-10 md:h-10 overflow-hidden">
+                  <img src={siteConfig.server.logo.content} alt="Server Logo" className="w-full h-full object-contain" />
+                </div>
+              )}
+              <span className="font-bebas text-xl md:text-2xl text-white">
+                <span className="hidden sm:inline">{siteConfig.server.name}</span>
+                <span className="sm:hidden">{siteConfig.server.name.split(" ").map((w) => w[0]).join("")}</span>
               </span>
+            </div>
             </div>
             <p className="text-gta-light leading-relaxed">
               {siteConfig.server.description}

@@ -21,7 +21,7 @@ const app = express();
 app.use("/api/user", userRoute);
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "https://legacyrpnepal.vercel.app", credentials: true }));
 app.use(cookieParser());
 
 // Routes
@@ -41,4 +41,4 @@ console.log("DISCORD_REDIRECT_URI:", process.env.DISCORD_REDIRECT_URI);
 
 // Start server
 const PORT = Number(process.env.PORT) || 4000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on https://legacyrpnepal.vercel.app`));
