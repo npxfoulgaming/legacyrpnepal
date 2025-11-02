@@ -1,0 +1,77 @@
+// server/api/user.ts
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import pool from "../db";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// TypeScript interface for your DB rows
+import type { RowDataPacket } from "mysql2/promise";
+
+interface StoredDiscordUser extends RowDataPacket {
+  id: number;
+  discord_id: string;
+  username: string;
+  global_name: string | null;
+  discriminator: string;
+  email: string | null;
+  verified: boolean;
+  avatar_url: string | null;
+  banner: string | null;
+  accent_color: number | null;
+  locale: string | null;
+  mfa_enabled: boolean;
+  flags: number | null;
+  public_flags: number | null;
+  premium_type: number | null;
+  bot: boolean;
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  expires_at: Date;
+  guilds: string;
+  connections: string;
+  guild_member: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const accessToken =
+    req.headers["x-access-token"] || req.query.access_token;
+
+  if (!accessToken || typeof accessToken !== "string") {
+    return res.status(400).json({ error: "access_token is required" });
+  }
+
+  try {
+    // Cast query result to RowDataPacket[] first
+    const [rows] = await pool.query<RowDataPacket[]>(
+      "SELECT * FROM users WHERE access_token = ?",
+      [accessToken]
+    );
+
+    // Then safely cast to your interface
+    const users = rows as StoredDiscordUser[];
+    const user = users[0];
+
+    if (!user) return res.status(401).json({ error: "Invalid access token" });
+
+    // Parse JSON columns before returning
+    const response = {
+      ...user,
+      guilds: JSON.parse(user.guilds),
+      connections: JSON.parse(user.connections),
+      guild_member: user.guild_member ? JSON.parse(user.guild_member) : null,
+    };
+
+    res.status(200).json({ user: response });
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+}
