@@ -20,7 +20,7 @@ export default function LoginPage() {
 
   // Discord login URL
   const discordLoginUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL + "/auth/discord/login";
+    "https://legacyrpnepal.vercel.app/auth/discord/login";
 
   return (
     <div className="flex justify-center items-center h-screen bg-gta-black">
