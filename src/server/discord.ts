@@ -2,12 +2,10 @@ import { Router } from "express";
 import axios from "axios";
 import { db } from "./db";
 import type { RowDataPacket } from "mysql2";
-import cookieParser from "cookie-parser";
 
 const router = Router();
-router.use(cookieParser());
 
-// --- TypeScript interfaces ---
+// TypeScript interfaces
 interface DiscordUser {
   id: string;
   username: string;
@@ -55,27 +53,47 @@ interface GuildMember {
 }
 
 interface UserRow extends RowDataPacket {
+  id: number;
   discord_id: string;
   username: string;
   global_name: string;
+  discriminator: string;
+  email: string;
+  verified: number;
   avatar_url: string | null;
   banner: string | null;
+  accent_color: number | null;
+  locale: string;
+  mfa_enabled: number;
+  flags: number;
+  public_flags: number;
+  premium_type: number;
+  bot: number;
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  expires_at: Date;
+  guilds: string;
+  connections: string;
+  guild_member: string;
+  login_ip: string;
   role_level: number;
   banned: number;
-  login_ip: string;
+  last_login: Date;
 }
 
-// --- 1. Discord login ---
+// 1. Discord login
 router.get("/login", (_req, res) => {
-  const redirectUri = encodeURIComponent(process.env.DISCORD_REDIRECT_URI!);
-  const url = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=identify%20email%20guilds%20connections`;
+  const url = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+    process.env.DISCORD_REDIRECT_URI!
+  )}&response_type=code&scope=identify%20email%20guilds%20connections`;
   res.redirect(url);
 });
 
-// --- 2. Discord callback ---
+// 2. Discord callback
 router.get("/callback", async (req, res) => {
   const code = req.query.code as string;
-  if (!code) return res.status(400).send("No code provided");
+  if (!code) return res.status(400).send("No code");
 
   try {
     // Exchange code for token
@@ -93,11 +111,17 @@ router.get("/callback", async (req, res) => {
 
     const { access_token, refresh_token, token_type, expires_in } = tokenRes.data;
 
-    // Fetch Discord data
+    // Fetch Discord user, guilds, connections
     const [userRes, guildsRes, connectionsRes] = await Promise.all([
-      axios.get<DiscordUser>("https://discord.com/api/users/@me", { headers: { Authorization: `${token_type} ${access_token}` } }),
-      axios.get<DiscordGuild[]>("https://discord.com/api/users/@me/guilds", { headers: { Authorization: `${token_type} ${access_token}` } }),
-      axios.get<DiscordConnection[]>("https://discord.com/api/users/@me/connections", { headers: { Authorization: `${token_type} ${access_token}` } }),
+      axios.get<DiscordUser>("https://discord.com/api/users/@me", {
+        headers: { Authorization: `${token_type} ${access_token}` },
+      }),
+      axios.get<DiscordGuild[]>("https://discord.com/api/users/@me/guilds", {
+        headers: { Authorization: `${token_type} ${access_token}` },
+      }),
+      axios.get<DiscordConnection[]>("https://discord.com/api/users/@me/connections", {
+        headers: { Authorization: `${token_type} ${access_token}` },
+      }),
     ]);
 
     const user = userRes.data;
@@ -105,17 +129,27 @@ router.get("/callback", async (req, res) => {
     const connections = connectionsRes.data;
     const expiresAt = new Date(Date.now() + expires_in * 1000);
 
-    const avatarUrl = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}${user.avatar.startsWith("a_") ? ".gif" : ".png"}` : null;
-    const bannerUrl = user.banner ? `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png` : null;
+    // Construct full avatar URL (animated gifs supported)
+    const avatarUrl = user.avatar
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}${
+          user.avatar.startsWith("a_") ? ".gif" : ".png"
+        }`
+      : null;
 
-    // Fetch guild_member info using bot token
+    // Construct full banner URL
+    const bannerUrl = user.banner
+      ? `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png`
+      : null;
+
+    // Fetch guild_member data using Bot Token
     const botToken = process.env.DISCORD_BOT_TOKEN!;
     const guildMembers: GuildMember[] = await Promise.all(
       guilds.map(async (guild) => {
         try {
-          const memberRes = await axios.get(`https://discord.com/api/v10/guilds/${guild.id}/members/${user.id}`, {
-            headers: { Authorization: `Bot ${botToken}` },
-          });
+          const memberRes = await axios.get(
+            `https://discord.com/api/v10/guilds/${guild.id}/members/${user.id}`,
+            { headers: { Authorization: `Bot ${botToken}` } }
+          );
           const member = memberRes.data;
           return {
             guild_id: guild.id,
@@ -131,65 +165,72 @@ router.get("/callback", async (req, res) => {
       })
     );
 
-    // Detect user IP (Vercel-friendly)
+    // Detect user IP
     const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0] || req.socket.remoteAddress || "unknown";
 
-    // Optional: fetch client info (BigDataCloud)
-    let loginIp = ip;
-    try {
-      const bigDataRes = await axios.get(`https://api.bigdatacloud.net/data/client-info?ip=${ip}&localityLanguage=en`);
-      loginIp = JSON.stringify(bigDataRes.data);
-    } catch {
-      loginIp = JSON.stringify({ ip });
-    }
+    // Fetch client info from BigDataCloud
+    const bigDataRes = await axios.get(`https://api.bigdatacloud.net/data/client-info?ip=${ip}&localityLanguage=en`);
+    const loginIp = bigDataRes.data; // JSON object
 
     // Insert/update user
     await db.query(
       `INSERT INTO users (
-        discord_id, username, global_name, discriminator, email, verified, avatar_url, banner, accent_color, locale, mfa_enabled,
-        flags, public_flags, premium_type, bot, access_token, refresh_token, token_type, expires_at, guilds, connections, guild_member, login_ip, last_login
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-      ON DUPLICATE KEY UPDATE
-        username=VALUES(username),
-        global_name=VALUES(global_name),
-        discriminator=VALUES(discriminator),
-        email=VALUES(email),
-        verified=VALUES(verified),
-        avatar_url=VALUES(avatar_url),
-        banner=VALUES(banner),
-        accent_color=VALUES(accent_color),
-        locale=VALUES(locale),
-        mfa_enabled=VALUES(mfa_enabled),
-        flags=VALUES(flags),
-        public_flags=VALUES(public_flags),
-        premium_type=VALUES(premium_type),
-        bot=VALUES(bot),
-        access_token=VALUES(access_token),
-        refresh_token=VALUES(refresh_token),
-        token_type=VALUES(token_type),
-        expires_at=VALUES(expires_at),
-        guilds=VALUES(guilds),
-        connections=VALUES(connections),
-        guild_member=VALUES(guild_member),
-        login_ip=VALUES(login_ip),
-        last_login=CURRENT_TIMESTAMP`,
+          discord_id, username, global_name, discriminator, email, verified, avatar_url, banner, accent_color, locale, mfa_enabled,
+          flags, public_flags, premium_type, bot, access_token, refresh_token, token_type, expires_at, guilds, connections, guild_member, login_ip, last_login
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        ON DUPLICATE KEY UPDATE
+          username=VALUES(username),
+          global_name=VALUES(global_name),
+          discriminator=VALUES(discriminator),
+          email=VALUES(email),
+          verified=VALUES(verified),
+          avatar_url=VALUES(avatar_url),
+          banner=VALUES(banner),
+          accent_color=VALUES(accent_color),
+          locale=VALUES(locale),
+          mfa_enabled=VALUES(mfa_enabled),
+          flags=VALUES(flags),
+          public_flags=VALUES(public_flags),
+          premium_type=VALUES(premium_type),
+          bot=VALUES(bot),
+          access_token=VALUES(access_token),
+          refresh_token=VALUES(refresh_token),
+          token_type=VALUES(token_type),
+          expires_at=VALUES(expires_at),
+          guilds=VALUES(guilds),
+          connections=VALUES(connections),
+          guild_member=VALUES(guild_member),
+          login_ip=VALUES(login_ip),
+          last_login=CURRENT_TIMESTAMP`,
       [
-        user.id, user.username, user.global_name, user.discriminator, user.email,
-        user.verified ? 1 : 0, avatarUrl, bannerUrl, user.accent_color, user.locale,
-        user.mfa_enabled ? 1 : 0, user.flags, user.public_flags, user.premium_type,
-        user.bot ? 1 : 0, access_token, refresh_token, token_type, expiresAt,
-        JSON.stringify(guilds), JSON.stringify(connections), JSON.stringify(guildMembers),
-        loginIp
+        user.id,
+        user.username,
+        user.global_name,
+        user.discriminator,
+        user.email,
+        user.verified ? 1 : 0,
+        avatarUrl,
+        bannerUrl,
+        user.accent_color,
+        user.locale,
+        user.mfa_enabled ? 1 : 0,
+        user.flags,
+        user.public_flags,
+        user.premium_type,
+        user.bot ? 1 : 0,
+        access_token,
+        refresh_token,
+        token_type,
+        expiresAt,
+        JSON.stringify(guilds),
+        JSON.stringify(connections),
+        JSON.stringify(guildMembers),
+        JSON.stringify(loginIp),
       ]
     );
 
-    // Set secure cookie
-    res.cookie("token", access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: expires_in * 1000,
-      sameSite: "lax",
-    });
+    res.cookie("token", access_token, { httpOnly: true, maxAge: expires_in * 1000 });
     res.redirect("/");
   } catch (err) {
     console.error("OAuth Error:", err);
@@ -197,13 +238,13 @@ router.get("/callback", async (req, res) => {
   }
 });
 
-// --- Logout ---
+// Logout
 router.get("/logout", (_req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out" });
 });
 
-// --- Get current user ---
+// Get current user
 router.get("/me", async (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.json(null);
