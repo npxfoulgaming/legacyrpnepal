@@ -37,20 +37,18 @@ const DesktopNavigation = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
-  // Fetch logged-in user
+  // Fetch logged-in user on mount
   useEffect(() => {
     async function fetchUser() {
-      const token = localStorage.getItem("access_token");
-      if (!token) return;
-
       try {
-        const res = await fetch(`/api/user?access_token=${token}`);
+        const res = await fetch(`/api/auth/discord/me`, { credentials: "include" });
         if (res.ok) {
           const data = await res.json();
-          setUser({ username: data.user.username, avatar_url: data.user.avatar_url });
-        } else {
-          localStorage.removeItem("access_token");
-          setUser(null);
+          if (data) {
+            setUser({ username: data.username, avatar_url: data.avatar_url });
+          } else {
+            setUser(null);
+          }
         }
       } catch (err) {
         console.error("Failed to fetch user:", err);
@@ -59,24 +57,14 @@ const DesktopNavigation = () => {
     fetchUser();
   }, []);
 
+  // Scroll effect
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (window.scrollY < 100) setActiveSection("home");
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setIsDropdownOpen(false);
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
+  // GSAP ScrollTrigger
   useGSAP(() => {
     ScrollTrigger.create({
       id: "nav-home",
@@ -111,16 +99,32 @@ const DesktopNavigation = () => {
       });
   });
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setIsDropdownOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const target = document.querySelector(href);
     if (target) smoothScrollTo(target, -80);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
+  const handleLogout = async () => {
+    await fetch("/api/auth/discord/logout", { credentials: "include" });
     setUser(null);
-    window.location.reload();
+  };
+
+  const handleUserClick = () => {
+    if (!user) {
+      // Redirect to Discord login
+      window.location.href = "/api/auth/discord/login";
+    } else {
+      setIsDropdownOpen(!isDropdownOpen);
+    }
   };
 
   return (
@@ -184,10 +188,10 @@ const DesktopNavigation = () => {
               Discord
             </a>
 
-            {/* User Dropdown */}
+            {/* User Icon */}
             <div ref={dropdownRef} className="relative">
               <div
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                onClick={handleUserClick}
                 className="p-2 border border-white/20 hover:border-gta-green cursor-pointer transition-colors duration-300 rounded-md"
               >
                 {user?.avatar_url ? (
@@ -197,26 +201,15 @@ const DesktopNavigation = () => {
                 )}
               </div>
 
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-gta-black text-white border border-white/10 shadow-lg py-2 z-50">
-                  {user ? (
-                    <>
-                      <div className="px-4 py-2 font-medium border-b border-white/10">{user.username}</div>
-                      <button
-                        className="w-full px-4 py-2 text-left hover:bg-gta-green hover:text-black transition-colors duration-200"
-                        onClick={handleLogout}
-                      >
-                        Logout
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      className="w-full px-4 py-2 text-left hover:bg-gta-green hover:text-black transition-colors duration-200"
-                      onClick={() => (window.location.href = "/login")}
-                    >
-                      Login
-                    </button>
-                  )}
+              {isDropdownOpen && user && (
+                <div className="absolute right-0 mt-2 w-44 bg-gta-black text-white border border-white/10 shadow-lg py-2 z-50">
+                  <div className="px-4 py-2 font-medium border-b border-white/10">{user.username}</div>
+                  <button
+                    className="w-full px-4 py-2 text-left hover:bg-gta-green hover:text-black transition-colors duration-200"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
                 </div>
               )}
             </div>

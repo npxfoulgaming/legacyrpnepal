@@ -153,6 +153,18 @@ export const Footer = () => {
             <Link to="/terms" className="hover:text-white transition-colors">
               Terms of Service
             </Link>
+            <span className="text-gta-medium">|</span>
+            <Link to="/support" className="hover:text-white transition-colors">
+              Support Us
+            </Link>
+            <span className="text-gta-medium">|</span>
+            <Link to="/events" className="hover:text-white transition-colors">
+              Server Events
+            </Link>
+            <span className="text-gta-medium">|</span>
+            <Link to="/serverrules" className="hover:text-white transition-colors">
+              Server Rules
+            </Link>
           </div>
         </div>
       </div>
