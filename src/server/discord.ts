@@ -1,8 +1,11 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { Router } from "express";
 import axios from "axios";
-import { db } from "../server/db"; // adjust path to your DB connection
+import { db } from "./db";
 import type { RowDataPacket } from "mysql2";
 
+const router = Router();
+
+// TypeScript interfaces
 interface DiscordUser {
   id: string;
   username: string;
@@ -79,94 +82,103 @@ interface UserRow extends RowDataPacket {
   last_login: Date;
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const path = req.url?.split("/api/auth/discord")[1] || "";
+// 1. Discord login
+router.get("/login", (_req, res) => {
+  const url = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+    process.env.DISCORD_REDIRECT_URI!
+  )}&response_type=code&scope=identify%20email%20guilds%20connections`;
+  res.redirect(url);
+});
 
-  // Helper to set HttpOnly cookie
-  const setCookie = (token: string, maxAge: number) => {
-    res.setHeader(
-      "Set-Cookie",
-      `token=${token}; HttpOnly; Path=/; Max-Age=${maxAge}; SameSite=Lax; ${process.env.NODE_ENV === "production" ? "Secure;" : ""}`
-    );
-  };
+// 2. Discord callback
+router.get("/callback", async (req, res) => {
+  const code = req.query.code as string;
+  if (!code) return res.status(400).send("No code");
 
   try {
-    // ------------------ LOGIN ------------------
-    if (path === "/login") {
-      const url = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-        process.env.DISCORD_REDIRECT_URI!
-      )}&response_type=code&scope=identify%20email%20guilds%20connections`;
-      return res.redirect(url);
-    }
+    // Exchange code for token
+    const tokenRes = await axios.post(
+      "https://discord.com/api/oauth2/token",
+      new URLSearchParams({
+        client_id: process.env.DISCORD_CLIENT_ID!,
+        client_secret: process.env.DISCORD_CLIENT_SECRET!,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: process.env.DISCORD_REDIRECT_URI!,
+      }),
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+    );
 
-    // ------------------ CALLBACK ------------------
-    if (path === "/callback") {
-      const code = req.query.code as string;
-      if (!code) return res.status(400).send("No code provided");
+    const { access_token, refresh_token, token_type, expires_in } = tokenRes.data;
 
-      // Exchange code for access token
-      const tokenRes = await axios.post(
-        "https://discord.com/api/oauth2/token",
-        new URLSearchParams({
-          client_id: process.env.DISCORD_CLIENT_ID!,
-          client_secret: process.env.DISCORD_CLIENT_SECRET!,
-          grant_type: "authorization_code",
-          code,
-          redirect_uri: process.env.DISCORD_REDIRECT_URI!,
-        }),
-        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-      );
+    // Fetch Discord user, guilds, connections
+    const [userRes, guildsRes, connectionsRes] = await Promise.all([
+      axios.get<DiscordUser>("https://discord.com/api/users/@me", {
+        headers: { Authorization: `${token_type} ${access_token}` },
+      }),
+      axios.get<DiscordGuild[]>("https://discord.com/api/users/@me/guilds", {
+        headers: { Authorization: `${token_type} ${access_token}` },
+      }),
+      axios.get<DiscordConnection[]>("https://discord.com/api/users/@me/connections", {
+        headers: { Authorization: `${token_type} ${access_token}` },
+      }),
+    ]);
 
-      const { access_token, refresh_token, token_type, expires_in } = tokenRes.data;
-      const expiresAt = new Date(Date.now() + expires_in * 1000);
+    const user = userRes.data;
+    const guilds = guildsRes.data;
+    const connections = connectionsRes.data;
+    const expiresAt = new Date(Date.now() + expires_in * 1000);
 
-      // Fetch user info
-      const [userRes, guildsRes, connectionsRes] = await Promise.all([
-        axios.get<DiscordUser>("https://discord.com/api/users/@me", { headers: { Authorization: `${token_type} ${access_token}` } }),
-        axios.get<DiscordGuild[]>("https://discord.com/api/users/@me/guilds", { headers: { Authorization: `${token_type} ${access_token}` } }),
-        axios.get<DiscordConnection[]>("https://discord.com/api/users/@me/connections", { headers: { Authorization: `${token_type} ${access_token}` } }),
-      ]);
+    // Construct full avatar URL (animated gifs supported)
+    const avatarUrl = user.avatar
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}${
+          user.avatar.startsWith("a_") ? ".gif" : ".png"
+        }`
+      : null;
 
-      const user = userRes.data;
-      const guilds = guildsRes.data;
-      const connections = connectionsRes.data;
+    // Construct full banner URL
+    const bannerUrl = user.banner
+      ? `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png`
+      : null;
 
-      const avatarUrl = user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}${user.avatar.startsWith("a_") ? ".gif" : ".png"}`
-        : null;
-      const bannerUrl = user.banner ? `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png` : null;
+    // Fetch guild_member data using Bot Token
+    const botToken = process.env.DISCORD_BOT_TOKEN!;
+    const guildMembers: GuildMember[] = await Promise.all(
+      guilds.map(async (guild) => {
+        try {
+          const memberRes = await axios.get(
+            `https://discord.com/api/v10/guilds/${guild.id}/members/${user.id}`,
+            { headers: { Authorization: `Bot ${botToken}` } }
+          );
+          const member = memberRes.data;
+          return {
+            guild_id: guild.id,
+            roles: member.roles || [],
+            joined_at: member.joined_at,
+            nickname: member.nick,
+            deaf: member.deaf,
+            mute: member.mute,
+          };
+        } catch {
+          return { guild_id: guild.id, roles: [], joined_at: "", nickname: null, deaf: false, mute: false };
+        }
+      })
+    );
 
-      // Fetch guild members using Bot token
-      const botToken = process.env.DISCORD_BOT_TOKEN!;
-      const guildMembers: GuildMember[] = await Promise.all(
-        guilds.map(async (g) => {
-          try {
-            const r = await axios.get(`https://discord.com/api/v10/guilds/${g.id}/members/${user.id}`, {
-              headers: { Authorization: `Bot ${botToken}` },
-            });
-            return {
-              guild_id: g.id,
-              roles: r.data.roles || [],
-              joined_at: r.data.joined_at,
-              nickname: r.data.nick,
-              deaf: r.data.deaf,
-              mute: r.data.mute,
-            };
-          } catch {
-            return { guild_id: g.id, roles: [], joined_at: "", nickname: null, deaf: false, mute: false };
-          }
-        })
-      );
+    // Detect user IP
+    const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0] || req.socket.remoteAddress || "unknown";
 
-      // Detect IP
-      const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0] || req.socket.remoteAddress || "unknown";
+    // Fetch client info from BigDataCloud
+    const bigDataRes = await axios.get(`https://api.bigdatacloud.net/data/client-info?ip=${ip}&localityLanguage=en`);
+    const loginIp = bigDataRes.data; // JSON object
 
-      // Insert/Update user in DB
-      await db.query(
-        `INSERT INTO users (
+    // Insert/update user
+    await db.query(
+      `INSERT INTO users (
           discord_id, username, global_name, discriminator, email, verified, avatar_url, banner, accent_color, locale, mfa_enabled,
           flags, public_flags, premium_type, bot, access_token, refresh_token, token_type, expires_at, guilds, connections, guild_member, login_ip, last_login
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
         ON DUPLICATE KEY UPDATE
           username=VALUES(username),
           global_name=VALUES(global_name),
@@ -191,40 +203,62 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           guild_member=VALUES(guild_member),
           login_ip=VALUES(login_ip),
           last_login=CURRENT_TIMESTAMP`,
-        [
-          user.id, user.username, user.global_name, user.discriminator, user.email, user.verified ? 1 : 0,
-          avatarUrl, bannerUrl, user.accent_color, user.locale, user.mfa_enabled ? 1 : 0,
-          user.flags, user.public_flags, user.premium_type, user.bot ? 1 : 0,
-          access_token, refresh_token, token_type, expiresAt,
-          JSON.stringify(guilds), JSON.stringify(connections), JSON.stringify(guildMembers), ip
-        ]
-      );
+      [
+        user.id,
+        user.username,
+        user.global_name,
+        user.discriminator,
+        user.email,
+        user.verified ? 1 : 0,
+        avatarUrl,
+        bannerUrl,
+        user.accent_color,
+        user.locale,
+        user.mfa_enabled ? 1 : 0,
+        user.flags,
+        user.public_flags,
+        user.premium_type,
+        user.bot ? 1 : 0,
+        access_token,
+        refresh_token,
+        token_type,
+        expiresAt,
+        JSON.stringify(guilds),
+        JSON.stringify(connections),
+        JSON.stringify(guildMembers),
+        JSON.stringify(loginIp),
+      ]
+    );
 
-      setCookie(access_token, expires_in);
-      return res.redirect("/");
-    }
-
-    // ------------------ LOGOUT ------------------
-    if (path === "/logout") {
-      setCookie("", 0);
-      return res.json({ message: "Logged out" });
-    }
-
-    // ------------------ GET CURRENT USER ------------------
-    if (path === "/me") {
-      const token = req.headers.cookie?.split("; ").find(c => c.startsWith("token="))?.split("=")[1];
-      if (!token) return res.json(null);
-
-      const [rows] = await db.query<UserRow[]>(
-        "SELECT discord_id, username, global_name, avatar_url, banner, role_level, banned, login_ip FROM users WHERE access_token = ?",
-        [token]
-      );
-      return res.json(rows.length ? rows[0] : null);
-    }
-
-    return res.status(404).send("Not found");
+    res.cookie("token", access_token, { httpOnly: true, maxAge: expires_in * 1000 });
+    res.redirect("/");
   } catch (err) {
-    console.error("Discord OAuth Error:", err);
-    return res.status(500).send("Internal Server Error");
+    console.error("OAuth Error:", err);
+    res.status(500).send("OAuth failed");
   }
-}
+});
+
+// Logout
+router.get("/logout", (_req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
+});
+
+// Get current user
+router.get("/me", async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.json(null);
+
+  try {
+    const [rows] = await db.query<UserRow[]>(
+      "SELECT discord_id, username, global_name, avatar_url, banner, role_level, banned, login_ip FROM users WHERE access_token = ?",
+      [token]
+    );
+    res.json(rows.length ? rows[0] : null);
+  } catch (err) {
+    console.error("Fetch user error:", err);
+    res.status(500).json(null);
+  }
+});
+
+export default router;
