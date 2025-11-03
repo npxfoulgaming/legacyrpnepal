@@ -129,80 +129,67 @@ router.get("/callback", async (req, res) => {
     const connections = connectionsRes.data;
     const expiresAt = new Date(Date.now() + expires_in * 1000);
 
-    // Construct full avatar URL (animated gifs supported)
+    // Avatar & banner URLs
     const avatarUrl = user.avatar
-      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}${
-          user.avatar.startsWith("a_") ? ".gif" : ".png"
-        }`
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}${user.avatar.startsWith("a_") ? ".gif" : ".png"}`
       : null;
-
-    // Construct full banner URL
     const bannerUrl = user.banner
       ? `https://cdn.discordapp.com/banners/${user.id}/${user.banner}.png`
       : null;
 
-    // Fetch guild_member data using Bot Token
-    const botToken = process.env.DISCORD_BOT_TOKEN!;
-    const guildMembers: GuildMember[] = await Promise.all(
-      guilds.map(async (guild) => {
-        try {
-          const memberRes = await axios.get(
-            `https://discord.com/api/v10/guilds/${guild.id}/members/${user.id}`,
-            { headers: { Authorization: `Bot ${botToken}` } }
-          );
-          const member = memberRes.data;
-          return {
-            guild_id: guild.id,
-            roles: member.roles || [],
-            joined_at: member.joined_at,
-            nickname: member.nick,
-            deaf: member.deaf,
-            mute: member.mute,
-          };
-        } catch {
-          return { guild_id: guild.id, roles: [], joined_at: "", nickname: null, deaf: false, mute: false };
-        }
-      })
-    );
+    // Serverless-safe: skip fetching guild member details
+    const guildMembers: GuildMember[] = guilds.map(guild => ({
+      guild_id: guild.id,
+      roles: [],
+      joined_at: "",
+      nickname: null,
+      deaf: false,
+      mute: false,
+    }));
 
-    // Detect user IP
-    const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0] || req.socket.remoteAddress || "unknown";
+    // Detect IP (Vercel-compatible)
+    const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0] || "0.0.0.0";
 
-    // Fetch client info from BigDataCloud
-    const bigDataRes = await axios.get(`https://api.bigdatacloud.net/data/client-info?ip=${ip}&localityLanguage=en`);
-    const loginIp = bigDataRes.data; // JSON object
+    // Optional: fetch client info
+    let loginIp = { ip };
+    try {
+      const bigDataRes = await axios.get(`https://api.bigdatacloud.net/data/client-info?ip=${ip}&localityLanguage=en`);
+      loginIp = bigDataRes.data;
+    } catch (e) {
+      console.warn("BigDataCloud failed, fallback to IP only.");
+    }
 
     // Insert/update user
     await db.query(
       `INSERT INTO users (
-          discord_id, username, global_name, discriminator, email, verified, avatar_url, banner, accent_color, locale, mfa_enabled,
-          flags, public_flags, premium_type, bot, access_token, refresh_token, token_type, expires_at, guilds, connections, guild_member, login_ip, last_login
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-        ON DUPLICATE KEY UPDATE
-          username=VALUES(username),
-          global_name=VALUES(global_name),
-          discriminator=VALUES(discriminator),
-          email=VALUES(email),
-          verified=VALUES(verified),
-          avatar_url=VALUES(avatar_url),
-          banner=VALUES(banner),
-          accent_color=VALUES(accent_color),
-          locale=VALUES(locale),
-          mfa_enabled=VALUES(mfa_enabled),
-          flags=VALUES(flags),
-          public_flags=VALUES(public_flags),
-          premium_type=VALUES(premium_type),
-          bot=VALUES(bot),
-          access_token=VALUES(access_token),
-          refresh_token=VALUES(refresh_token),
-          token_type=VALUES(token_type),
-          expires_at=VALUES(expires_at),
-          guilds=VALUES(guilds),
-          connections=VALUES(connections),
-          guild_member=VALUES(guild_member),
-          login_ip=VALUES(login_ip),
-          last_login=CURRENT_TIMESTAMP`,
+        discord_id, username, global_name, discriminator, email, verified, avatar_url, banner, accent_color, locale, mfa_enabled,
+        flags, public_flags, premium_type, bot, access_token, refresh_token, token_type, expires_at, guilds, connections, guild_member, login_ip, last_login
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+      ON DUPLICATE KEY UPDATE
+        username=VALUES(username),
+        global_name=VALUES(global_name),
+        discriminator=VALUES(discriminator),
+        email=VALUES(email),
+        verified=VALUES(verified),
+        avatar_url=VALUES(avatar_url),
+        banner=VALUES(banner),
+        accent_color=VALUES(accent_color),
+        locale=VALUES(locale),
+        mfa_enabled=VALUES(mfa_enabled),
+        flags=VALUES(flags),
+        public_flags=VALUES(public_flags),
+        premium_type=VALUES(premium_type),
+        bot=VALUES(bot),
+        access_token=VALUES(access_token),
+        refresh_token=VALUES(refresh_token),
+        token_type=VALUES(token_type),
+        expires_at=VALUES(expires_at),
+        guilds=VALUES(guilds),
+        connections=VALUES(connections),
+        guild_member=VALUES(guild_member),
+        login_ip=VALUES(login_ip),
+        last_login=CURRENT_TIMESTAMP`,
       [
         user.id,
         user.username,
@@ -230,8 +217,15 @@ router.get("/callback", async (req, res) => {
       ]
     );
 
-    res.cookie("token", access_token, { httpOnly: true, maxAge: expires_in * 1000 });
-    res.redirect("/");
+    // Secure cookie for Vercel
+    res.cookie("token", access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: expires_in * 1000,
+    });
+
+    res.redirect("https://legacyrpnepal.vercel.app/");
   } catch (err) {
     console.error("OAuth Error:", err);
     res.status(500).send("OAuth failed");
