@@ -2,7 +2,7 @@ import { defineConfig, type ViteDevServer } from "vite";
 import react from "@vitejs/plugin-react";
 import express from "express";
 import cookieParser from "cookie-parser";
-import discordRoutes from "./src/server/discord";
+import discordRoutes from "./src/server/index.express";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -18,7 +18,6 @@ export default defineConfig({
         app.use(cookieParser());
         app.use("/api/auth/discord", discordRoutes);
 
-        // Use Express as middleware inside Vite
         server.middlewares.use(app);
       },
     },
