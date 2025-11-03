@@ -4,6 +4,7 @@ import { HomePage } from './pages/HomePage'
 import { TermsOfService } from './components/Legal/TermsOfService'
 import { PrivacyPolicy } from './components/Legal/PrivacyPolicy'
 import { refreshScrollTriggers } from './lib/gsap-config'
+import { Events } from './components/Events/Events'
 
 // ScrollToTop component to handle route changes
 function ScrollToTop() {
@@ -41,6 +42,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/events" element={<Events />} />
         </Routes>
       </div>
     </Router>

@@ -170,11 +170,11 @@ useEffect(() => {
 
   const handleConnect = () => {
     // Copy server IP to clipboard
-    navigator.clipboard.writeText(siteConfig.server.ip).then(() => {
+    navigator.clipboard.writeText(`${siteConfig.server.connecttext}${siteConfig.server.ip}:${siteConfig.server.port}`).then(() => {
       // Show toast notification
       const toast = document.createElement('div')
       toast.className = 'fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gta-green text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce-in'
-      toast.textContent = `Server IP copied: ${siteConfig.server.ip}`
+      toast.textContent = `Server IP copied: ${siteConfig.server.ip}:${siteConfig.server.port}`
       document.body.appendChild(toast)
       
       setTimeout(() => {
@@ -268,7 +268,7 @@ useEffect(() => {
             {playerCount} / {maxPlayers}
           </span>
         </div>
-        <span className="text-gta-light text-xs font-mono">{siteConfig.server.ip}</span>
+        <span className="text-gta-light text-xs font-mono">{siteConfig.server.ip}:{siteConfig.server.port}</span>
       </div>
     </nav>
   )
