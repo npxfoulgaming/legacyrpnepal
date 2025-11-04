@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 import { gsap, ScrollTrigger, createBatchScrollTrigger } from '../../lib/gsap-config'
-import { CalendarDays, MapPin, Clock, X, Users, ArrowLeft } from 'lucide-react'
+import { CalendarDays, MapPin, Clock, X, Users, ArrowLeft, ClipboardClock } from 'lucide-react'
 import { format } from 'date-fns'
 
 interface DiscordUser {
@@ -45,18 +45,17 @@ const getEventStatus = (event: DiscordEvent) => {
   const now = new Date()
   const diffSec = Math.floor((start.getTime() - now.getTime()) / 1000)
 
-  if (diffSec > 0 && diffSec <= 120) return { label: 'Starting Soon', color: 'bg-purple-500' }
+  if (diffSec > 0 && diffSec <= 360) return { label: 'Starting Soon', color: 'bg-purple-500' }
   if (diffSec <= 0) return { label: 'Happening Now', color: 'bg-green-500' }
   return { label: 'Upcoming Event', color: 'bg-blue-500' }
 }
 
-// --- Helper to get relative time in human-readable format ---
+// --- Helper to get relative time ---
 const getRelativeTime = (event: DiscordEvent) => {
   const start = new Date(event.scheduled_start_time)
   const now = new Date()
   const diffSec = Math.floor((start.getTime() - now.getTime()) / 1000)
 
-  if (diffSec > 0 && diffSec <= 120) return `Starting Soon`
   if (diffSec <= 0) {
     const agoSec = Math.abs(diffSec)
     if (agoSec < 60) return `Started ${agoSec} second${agoSec !== 1 ? 's' : ''} ago`
@@ -68,7 +67,6 @@ const getRelativeTime = (event: DiscordEvent) => {
     return `Started ${Math.floor(agoSec / 31536000)} year${Math.floor(agoSec / 31536000) !== 1 ? 's' : ''} ago`
   }
 
-  // upcoming events > 2 minutes
   if (diffSec < 60) return `${diffSec} second${diffSec !== 1 ? 's' : ''}`
   if (diffSec < 3600) return `${Math.floor(diffSec / 60)} minute${Math.floor(diffSec / 60) !== 1 ? 's' : ''}`
   if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} hour${Math.floor(diffSec / 3600) !== 1 ? 's' : ''}`
@@ -78,14 +76,16 @@ const getRelativeTime = (event: DiscordEvent) => {
   return `${Math.floor(diffSec / 31536000)} year${Math.floor(diffSec / 31536000) !== 1 ? 's' : ''}`
 }
 
-
 export const Events = () => {
   const [events, setEvents] = useState<DiscordEvent[]>([])
   const [selectedEvent, setSelectedEvent] = useState<DiscordEvent | null>(null)
   const [userPopup, setUserPopup] = useState<DiscordUser[] | null>(null)
   const [loading, setLoading] = useState(true)
+  const [iconIndex, setIconIndex] = useState(0) // 0 = ClipboardClock, 1 = Clock
   const containerRef = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
+
+  const icons = [<ClipboardClock size={20} />, <Clock size={20} />]
 
   // --- Fetch events ---
   useEffect(() => {
@@ -116,9 +116,7 @@ export const Events = () => {
 
   // --- Live timer update every second ---
   useEffect(() => {
-    const interval = setInterval(() => {
-      setEvents((prev) => [...prev])
-    }, 1000)
+    const interval = setInterval(() => setEvents((prev) => [...prev]), 1000)
     return () => clearInterval(interval)
   }, [])
 
@@ -152,20 +150,37 @@ export const Events = () => {
     }
   }, { scope: containerRef })
 
+  // --- Sorted events based on icon ---
+  const sortedEvents = [...events]
+  if (iconIndex === 1) {
+    // Clock → sort by start time ascending
+    sortedEvents.sort((a, b) => new Date(a.scheduled_start_time).getTime() - new Date(b.scheduled_start_time).getTime())
+  } else {
+    // ClipboardClock → newest first
+    sortedEvents.reverse()
+  }
+
   return (
     <>
       {/* Header */}
       <div className="bg-gta-graphite/90 backdrop-blur-sm border-b border-gta-medium sticky top-0 z-40">
-        <div className="container-gta py-4">
+        <div className="container-gta py-4 flex justify-between items-center">
           <Link to="/" className="inline-flex items-center gap-2 text-gta-light hover:text-white transition-colors">
             <ArrowLeft className="w-5 h-5" />
             Back to Home
           </Link>
+
+          <button
+            onClick={() => setIconIndex((prev) => (prev + 1) % icons.length)}
+            className="text-gta-light hover:text-white transition-colors flex items-center gap-1"
+          >
+            {icons[iconIndex]}
+          </button>
         </div>
       </div>
+
       {/* Event List Section */}
       <section ref={containerRef} id="events" className="relative py-20 overflow-hidden">
-        
         <div className="section-container">
           <div className="text-center mb-12">
             <h2 ref={titleRef} className="text-4xl md:text-6xl font-gaming font-bold mb-4">
@@ -178,9 +193,9 @@ export const Events = () => {
 
           {loading ? (
             <p className="text-center text-gray-500 mt-10">Fetching events...</p>
-          ) : events.length > 0 ? (
+          ) : sortedEvents.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {events.map((event) => {
+              {sortedEvents.map((event) => {
                 const status = getEventStatus(event)
                 const relativeTime = getRelativeTime(event)
 
@@ -235,7 +250,6 @@ export const Events = () => {
                       </div>
                     )}
 
-                    {/* Discord Link + Interested */}
                     <div className="flex items-center justify-between mt-2">
                       <a
                         href={`https://discord.com/events/${event.id}`}

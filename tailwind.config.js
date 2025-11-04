@@ -21,6 +21,9 @@ export default {
           'salmon': '#F09E71',
           'purple': '#D5A0C4',
           'olive': '#488F21',
+          'pink': '#f798eaff',
+          'red': '#f14444ff',
+          
         }
       },
       fontFamily: {

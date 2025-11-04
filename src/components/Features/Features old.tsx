@@ -10,7 +10,7 @@ export const Features = () => {
   const cardsRef = useRef<HTMLDivElement>(null)
 
   useGSAP(() => {
-    // Title animation
+    // Title animation without scrub for cleaner effect
     gsap.from(titleRef.current, {
       y: 50,
       opacity: 0,
@@ -22,10 +22,11 @@ export const Features = () => {
       }
     })
 
-    // Cards animation
+    // Cards animation with scrub
     const cards = gsap.utils.toArray('.feature-card') as Element[]
     
     cards.forEach((card, index) => {
+      // Clean entrance animation
       gsap.from(card, {
         y: 40,
         opacity: 0,
@@ -37,7 +38,8 @@ export const Features = () => {
           toggleActions: 'play none none reverse'
         }
       })
-
+      
+      // Setup hover effects separately
       const icon = card.querySelector('.feature-icon')
       if (icon) {
         card.addEventListener('mouseenter', () => {
@@ -46,22 +48,11 @@ export const Features = () => {
             duration: 0.3,
             ease: 'power2.out'
           })
-          gsap.to(card, {
-            scale: 1.03,
-            boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-            duration: 0.3,
-            ease: 'power2.out'
-          })
         })
+        
         card.addEventListener('mouseleave', () => {
           gsap.to(icon, {
             scale: 1,
-            duration: 0.3,
-            ease: 'power2.out'
-          })
-          gsap.to(card, {
-            scale: 1,
-            boxShadow: '0 0 0 rgba(0,0,0,0)',
             duration: 0.3,
             ease: 'power2.out'
           })
@@ -69,7 +60,7 @@ export const Features = () => {
       }
     })
 
-    // Cleanup
+    // Cleanup function
     return () => {
       ScrollTrigger.getAll().forEach(trigger => {
         if (trigger.trigger && containerRef.current?.contains(trigger.trigger as Element)) {
@@ -102,52 +93,27 @@ export const Features = () => {
 
         {/* Features Grid */}
         <div ref={cardsRef} className="grid-gta">
-          {siteConfig.features.map((feature) => {
-            const CardContent = (
-              <>
-                {/* Icon */}
-                <div className="mb-4">
-                  <div className="feature-icon inline-flex p-3 bg-gta-green/10 text-gta-green transition-transform duration-300">
-                    {getIcon(feature.icon)}
-                  </div>
+          {siteConfig.features.map((feature) => (
+            <div
+              key={feature.id}
+              className="feature-card card-gta group"
+            >
+              {/* Icon */}
+              <div className="mb-4">
+                <div className="feature-icon inline-flex p-3 bg-gta-green/10 text-gta-green">
+                  {getIcon(feature.icon)}
                 </div>
-
-                {/* Content */}
-                <h3 className="text-xl font-bebas text-white mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gta-light">
-                  {feature.description}
-                </p>
-              </>
-            )
-
-            // Clickable card
-            if (feature.website) {
-              const isExternal = feature.website.startsWith('http')
-              return (
-                <a
-                  key={feature.id}
-                  href={feature.website}
-                  target={isExternal ? "_blank" : "_self"}
-                  rel={isExternal ? "noopener noreferrer" : undefined}
-                  className="feature-card card-gta group cursor-pointer transition-all duration-300"
-                >
-                  {CardContent}
-                </a>
-              )
-            }
-
-            // Non-clickable card
-            return (
-              <div
-                key={feature.id}
-                className="feature-card card-gta group cursor-default transition-all duration-300"
-              >
-                {CardContent}
               </div>
-            )
-          })}
+
+              {/* Content */}
+              <h3 className="text-xl font-bebas text-white mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-gta-light">
+                {feature.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

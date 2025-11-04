@@ -5,6 +5,9 @@ import { TermsOfService } from './components/Legal/TermsOfService'
 import { PrivacyPolicy } from './components/Legal/PrivacyPolicy'
 import { refreshScrollTriggers } from './lib/gsap-config'
 import { Events } from './components/Events/Events'
+import {Subscriptions } from './components/Subscriptions/Subscriptions'
+import {RdrSubscriptions } from './components/Subscriptions/RdrSubscriptions'
+import { ServerRules } from './components/ServerRules/ServerRules'
 
 // ScrollToTop component to handle route changes
 function ScrollToTop() {
@@ -43,6 +46,9 @@ function App() {
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/subscriptions" element={<Subscriptions />} />
+          <Route path="/subscriptions-rdr" element={<RdrSubscriptions />} />
+          <Route path="/serverrules" element={<ServerRules />} />
         </Routes>
       </div>
     </Router>

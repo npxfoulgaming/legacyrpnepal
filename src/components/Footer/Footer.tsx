@@ -154,7 +154,7 @@ export const Footer = () => {
               Terms of Service
             </Link>
             <span className="text-gta-medium">|</span>
-            <Link to="/support" className="hover:text-white transition-colors">
+            <Link to="/subscriptions" className="hover:text-white transition-colors">
               Support Us
             </Link>
             <span className="text-gta-medium">|</span>

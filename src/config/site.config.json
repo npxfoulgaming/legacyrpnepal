@@ -64,38 +64,44 @@
     {
       "id": "custom-framework",
       "title": "Custom Framework",
-      "description": "Built from scratch for optimal performance",
-      "icon": "Code2"
+      "description": "Built from scratch for optimal performance by our expert dev team of OP Freamwork",
+      "icon": "Code2",
+      "website": "https://discord.gg/opfw"
     },
     {
       "id": "voice-chat",
       "title": "Advanced Voice Chat",
       "description": "Crystal clear proximity voice with radio systems",
-      "icon": "Mic"
+      "icon": "Mic",
+      "website": ""
     },
     {
       "id": "economy",
       "title": "Dynamic Economy",
       "description": "Player-driven market with realistic pricing",
-      "icon": "DollarSign"
+      "icon": "DollarSign",
+      "website": ""
     },
     {
       "id": "housing",
       "title": "Housing System",
       "description": "Own properties and customize your space",
-      "icon": "Home"
+      "icon": "Home",
+      "website": ""
     },
     {
       "id": "vehicles",
       "title": "300+ Vehicles",
       "description": "Custom cars with realistic handling",
-      "icon": "Car"
+      "icon": "Car",
+      "website": ""
     },
     {
       "id": "events",
       "title": "Weekly Events",
       "description": "Community events with exclusive rewards",
-      "icon": "Calendar"
+      "icon": "Calendar",
+      "website": "/events"
     }
   ],
   "gallery": {
@@ -200,8 +206,8 @@
       "description": "Save lives and provide medical care",
       "requirements": ["16+ years old", "Medical training", "Active player"],
       "image": "/images/jobs/ems.jpg",
-      "website": "/ems/index.html",
-      "apply_url": "/apply/ems"
+      "website": "",
+      "apply_url": ""
     },
     {
       "id": "mechanic",
@@ -210,8 +216,8 @@
       "description": "Repair and customize vehicles",
       "requirements": ["No requirements", "Training provided"],
       "image": "/images/jobs/mechanic.jpg",
-      "website": "/mechanic/index.html",
-      "apply_url": "/apply/mechanic"
+      "website": "",
+      "apply_url": ""
     },
     {
       "id": "taxi",
@@ -220,8 +226,8 @@
       "description": "Transport citizens around the city",
       "requirements": ["Valid license", "Clean driving record"],
       "image": "/images/jobs/taxi.jpg",
-      "website": "/taxi/index.html",
-      "apply_url": "/apply/taxi"
+      "website": "",
+      "apply_url": ""
     },
     {
       "id": "dealer",
@@ -230,8 +236,8 @@
       "description": "Distribute illegal substances",
       "requirements": ["Street reputation", "Gang affiliation"],
       "image": "/images/jobs/dealer.jpg",
-      "website": "/dealer/index.html",
-      "apply_url": "/apply/dealer"
+      "website": "",
+      "apply_url": ""
     },
     {
       "id": "lawyer",
@@ -240,8 +246,8 @@
       "description": "Represent clients in legal matters",
       "requirements": ["Bar exam", "Good standing"],
       "image": "/images/jobs/lawyer.jpg",
-      "website": "/lawyer/index.html",
-      "apply_url": "/apply/lawyer"
+      "website": "",
+      "apply_url": ""
     }
   ]
   },
@@ -249,27 +255,108 @@
     {
       "id": "rdm",
       "title": "No Random Deathmatch (RDM)",
-      "description": "Killing without valid roleplay reason is prohibited"
+      "description": "Killing another player without a valid in-character reason is strictly prohibited."
     },
     {
       "id": "vdm",
       "title": "No Vehicle Deathmatch (VDM)",
-      "description": "Using vehicles as weapons without RP is not allowed"
+      "description": "Using vehicles to intentionally harm or kill other players without proper RP context is forbidden."
     },
     {
       "id": "metagaming",
       "title": "No Metagaming",
-      "description": "Using out-of-character information in-character is forbidden"
+      "description": "Using out-of-character information in-character is strictly forbidden."
     },
     {
       "id": "powergaming",
       "title": "No Powergaming",
-      "description": "Forcing actions on others without giving them a chance to respond"
+      "description": "Forcing actions on others without giving them a chance to react is prohibited."
     },
     {
       "id": "respect",
       "title": "Respect Everyone",
-      "description": "Treat all players and staff with respect"
+      "description": "All players and staff must be treated with respect. Harassment, bullying, or discrimination is prohibited."
+    }
+  ],
+  "serverrules": [
+    {
+      "srid": "rdm",
+      "srtitle": "No Random Deathmatch (RDM)",
+      "srdescription": "Killing another player without a valid in-character reason is strictly prohibited.",
+      "srroleplayContext": "RDM disrupts immersive roleplay and can ruin other players’ experience. Only engage in combat when it is justified by the storyline.",
+      "srenforcement": "",
+      "srexamples": [],
+      "srcommonMistakes": [],
+      "srnotes": "",
+      "sricon": "Shield"
+    },
+    {
+      "srid": "vdm",
+      "srtitle": "No Vehicle Deathmatch (VDM)",
+      "srdescription": "Using vehicles to intentionally harm or kill other players without proper RP context is forbidden.",
+      "srroleplayContext": "VDM breaks immersion and is unfair. Vehicles should be tools for roleplay, not instant kills.",
+      "srenforcement": "Immediate warning for minor incidents. Repeated or intentional VDM: temporary or permanent bans depending on severity.",
+      "srexamples": [
+        "Running over a player in a car outside a roleplay scenario.",
+        "Using a vehicle to chase and kill another player without RP justification."
+      ],
+      "srcommonMistakes": [
+        "Driving recklessly during car chases that are RP-approved.",
+        "Confusing accidents with intentional VDM."
+      ],
+      "srnotes": "Make sure any vehicle use for combat is clearly RP-driven and agreed upon by participants.",
+      "sricon": "Users"
+    },
+    {
+      "srid": "metagaming",
+      "srtitle": "No Metagaming",
+      "srdescription": "Using out-of-character information in-character is strictly forbidden.",
+      "srroleplayContext": "Metagaming gives unfair advantages and breaks immersion. Always separate IC (in-character) knowledge from OOC (out-of-character) knowledge.",
+      "srenforcement": "First offense: warning. Repeated offenses: temporary ban (1-7 days). Severe or repeated cases: permanent ban.",
+      "srexamples": [
+        "Using someone’s Discord messages to make IC decisions.",
+        "Knowing forum or ticket information to influence in-game actions."
+      ],
+      "srcommonMistakes": [
+        "Accidentally using IC knowledge learned out-of-character without intent.",
+        "Sharing OOC info to benefit your character."
+      ],
+      "srnotes": "If unsure whether info is OOC or IC, do not use it.",
+      "icon": "Eye"
+    },
+    {
+      "srid": "powergaming",
+      "srtitle": "No Powergaming",
+      "srdescription": "Forcing actions on others without giving them a chance to react is prohibited.",
+      "srroleplayContext": "Powergaming removes player agency and breaks the flow of RP. Every action should allow a response from affected players.",
+      "srenforcement": "Warnings for minor offenses; temporary ban for repeated violations; permanent ban for severe cases.",
+      "srexamples": [
+        "Dragging someone into a car without letting them react.",
+        "Instantly performing actions like healing or attacking without the other player being able to respond."
+      ],
+      "srommonMistakes": [
+        "Assuming automatic success in contested actions.",
+        "Not giving others a chance to roleplay their reactions."
+      ],
+      "srnotes": "All roleplay interactions must allow for natural reactions and responses.",
+      "sricon": "Lock"
+    },
+    {
+      "srid": "respect",
+      "srtitle": "Respect Everyone",
+      "srdescription": "All players and staff must be treated with respect. Harassment, bullying, or discrimination is prohibited.",
+      "srroleplayContext": "A respectful environment ensures an enjoyable experience for all players. Toxic behavior will not be tolerated.",
+      "srenforcement": "Disrespectful behavior may result in warnings, chat/mute penalties, temporary bans, or permanent bans depending on severity.",
+      "srexamples": [
+        "Using offensive language towards other players or staff.",
+        "Intentionally sabotaging events or interactions for harassment purposes."
+      ],
+      "srcommonMistakes": [
+        "Ignoring staff instructions during events.",
+        "Unintentional insults or teasing that disrupts community harmony."
+      ],
+      "srnotes": "Maintain a positive environment. Always resolve conflicts calmly and respectfully.",
+      "sricon": "Database"
     }
   ],
   "team": [
@@ -384,22 +471,351 @@
   },
   "donations": {
     "enabled": true,
-    "currency": "USD",
+    "currency": "NPR",
     "packages": [
       {
         "name": "Supporter",
         "price": 5,
-        "perks": ["Priority Queue", "Supporter Tag"]
+        "new": true,
+        "discount": false,
+        "discount_percentage": 10,
+        "image": "https://i.ibb.co/vCJY9MxK/foulgaming.png",
+        "smallimage": "https://i.ibb.co/vCJY9MxK/foulgaming.png",
+        "description": "",
+        "perks": ["Priority Queue", "Supporter Tag"],
+        "category": "edm",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
       },
       {
         "name": "VIP",
-        "price": 15,
-        "perks": ["Priority Queue", "VIP Tag", "Extra Character Slot", "Custom Plate"]
+        "price": 5,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/vip-package.png",
+        "smallimage": "",
+        "description": "Intermediate perks for dedicated supporters.",
+        "perks": ["Priority Queue", "Supporter Tag"],
+        "category": "edm",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
       },
       {
         "name": "Elite",
         "price": 30,
-        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"]
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/elite-package.png",
+        "smallimage": "/images/donations/elite-package-small.png",
+        "description": "Our most exclusive package for dedicated supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "edm",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Business Starter",
+        "price": 200,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/business-starter-package.png",
+        "smallimage": "/images/donations/business-starter-package-small.png",
+        "description": "Starter perks for business supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "business",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Normal",
+        "price": 300,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/business-normal-package.png",
+        "smallimage": "/images/donations/business-normal-package-small.png",
+        "description": "Basic perks for business supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "business",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Advanced",
+        "price": 500,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/business-advanced-package.png",
+        "smallimage": "/images/donations/business-advanced-package-small.png",
+        "description": "Advanced perks for business supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "business",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Gang Starter",
+        "price": 150,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "https://i.ibb.co/B2mh5PpV/OIP.webp",
+        "smallimage": "/images/donations/gang-starter-package-small.png",
+        "description": "Starter perks for gang supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "gang",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Normal",
+        "price": 300,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/gang-normal-package.png",
+        "smallimage": "/images/donations/gang-normal-package-small.png",
+        "description": "Basic perks for gang supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "gang",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Advanced",
+        "price": 30,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/gang-advanced-package.png",
+        "smallimage": "/images/donations/gang-advanced-package-small.png",
+        "description": "Advanced perks for gang supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles,"],
+        "category": "gang",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      }
+    ],
+    "rdrpackages": [
+      {
+        "name": "Supporter",
+        "price": 5000,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "https://i.ibb.co/vCJY9MxK/foulgaming.png",
+        "smallimage": "https://i.ibb.co/vCJY9MxK/foulgaming.png",
+        "description": "",
+        "perks": ["Priority Queue", "Supporter Tag"],
+        "category": "edm",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "VIP",
+        "price": 5,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/vip-package.png",
+        "smallimage": "",
+        "description": "Intermediate perks for dedicated supporters.",
+        "perks": ["Priority Queue", "Supporter Tag"],
+        "category": "edm",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Elite",
+        "price": 30,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/elite-package.png",
+        "smallimage": "/images/donations/elite-package-small.png",
+        "description": "Our most exclusive package for dedicated supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "edm",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Business Starter",
+        "price": 200,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/business-starter-package.png",
+        "smallimage": "/images/donations/business-starter-package-small.png",
+        "description": "Starter perks for business supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "business",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Normal",
+        "price": 300,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/business-normal-package.png",
+        "smallimage": "/images/donations/business-normal-package-small.png",
+        "description": "Basic perks for business supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "business",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Advanced",
+        "price": 500,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/business-advanced-package.png",
+        "smallimage": "/images/donations/business-advanced-package-small.png",
+        "description": "Advanced perks for business supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "business",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Gang Starter",
+        "price": 150,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "https://i.ibb.co/B2mh5PpV/OIP.webp",
+        "smallimage": "/images/donations/gang-starter-package-small.png",
+        "description": "Starter perks for gang supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "gang",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Normal",
+        "price": 300,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/gang-normal-package.png",
+        "smallimage": "/images/donations/gang-normal-package-small.png",
+        "description": "Basic perks for gang supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles"],
+        "category": "gang",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
+      },
+      {
+        "name": "Advanced",
+        "price": 30,
+        "new": true,
+        "discount": true,
+        "discount_percentage": 10,
+        "image": "/images/donations/gang-advanced-package.png",
+        "smallimage": "/images/donations/gang-advanced-package-small.png",
+        "description": "Advanced perks for gang supporters.",
+        "perks": ["Priority Queue", "Elite Tag", "2 Extra Character Slots", "Custom Plate", "Exclusive Vehicles,"],
+        "category": "gang",
+        "button":
+        {
+          "checkout_label": "Donate Now",
+          "checkout_url": "gang/advanced/checkout",
+          "view_label": "View Gang Package",
+          "view_url": "gang/advanced/details"
+        }
       }
     ]
   }

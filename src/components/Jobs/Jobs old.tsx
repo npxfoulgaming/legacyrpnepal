@@ -183,27 +183,25 @@ export const Jobs = () => {
                       </div>
                     </div>
 
-                    {/* Apply and Website Buttons (conditionally rendered) */}
+                    {/* Apply and Websites Buttons */}
                     <div className={`mt-4 flex gap-2 transition-all duration-500 ${
                       hoveredJob === job.id ? 'opacity-100' : 'opacity-0'
                     }`}>
-                      {job.apply_url && job.apply_url.trim() !== '' && (
-                        <button
-                          className="w-full btn-gta text-sm flex items-center justify-center gap-2"
-                          onClick={() => window.open(job.apply_url, "_blank")}
-                        >
-                          <Briefcase /> Apply Now
-                        </button>
-                      )}
+                      {/* Apply Now Button */}
+                      <button
+                        className="w-full btn-gta text-sm flex items-center justify-center gap-2"
+                        onClick={() => window.open(job.apply_url, "_blank")}
+                      >
+                        <Briefcase /> Apply Now
+                      </button>
 
-                      {job.website && job.website.trim() !== '' && (
-                        <button
-                          className="w-full btn-gta text-sm flex items-center justify-center gap-2"
-                          onClick={() => window.open(job.website, "_blank")}
-                        >
-                          <Globe />
-                        </button>
-                      )}
+                      {/* Websites Button */}
+                      <button
+                        className="w-full btn-gta text-sm flex items-center justify-center gap-2"
+                        onClick={() => window.open(job.website, "_blank")}
+                      >
+                        <Globe />
+                      </button>
                     </div>
                   </div>
                 </div>
