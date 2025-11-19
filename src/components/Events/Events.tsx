@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
-import Link from "react-router-dom";
+import { Link } from "react-router-dom";
 import { gsap, ScrollTrigger, createBatchScrollTrigger } from '../../lib/gsap-config'
 import { CalendarDays, MapPin, Clock, X, Users, ArrowLeft, ClipboardClock } from 'lucide-react'
 import { format } from 'date-fns'
