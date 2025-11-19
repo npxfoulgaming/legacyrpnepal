@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { gsap, ScrollTrigger, createBatchScrollTrigger } from '../../lib/gsap-config'
 import { CalendarDays, MapPin, Clock, X, Users, ArrowLeft, ClipboardClock } from 'lucide-react'
 import { format } from 'date-fns'
-// import { Footer } from '../Footer/Footer'
 
 interface DiscordUser {
   id: string
@@ -28,7 +27,6 @@ interface DiscordEventUserResponse {
 
 interface DiscordEvent {
   id: string
-  guild_id?: string // 🔹 ADDED
   name: string
   description?: string
   scheduled_start_time: string
@@ -41,8 +39,7 @@ interface DiscordEvent {
   user_responses?: DiscordEventUserResponse[]
 }
 
-// ✂️ No other code modified below this line
-
+// --- Helper to get status and color ---
 const getEventStatus = (event: DiscordEvent) => {
   const start = new Date(event.scheduled_start_time)
   const now = new Date()
@@ -53,6 +50,7 @@ const getEventStatus = (event: DiscordEvent) => {
   return { label: 'Upcoming Event', color: 'bg-blue-500' }
 }
 
+// --- Helper to get relative time ---
 const getRelativeTime = (event: DiscordEvent) => {
   const start = new Date(event.scheduled_start_time)
   const now = new Date()
@@ -83,12 +81,13 @@ export const Events = () => {
   const [selectedEvent, setSelectedEvent] = useState<DiscordEvent | null>(null)
   const [userPopup, setUserPopup] = useState<DiscordUser[] | null>(null)
   const [loading, setLoading] = useState(true)
-  const [iconIndex, setIconIndex] = useState(0)
+  const [iconIndex, setIconIndex] = useState(0) // 0 = ClipboardClock, 1 = Clock
   const containerRef = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
 
   const icons = [<ClipboardClock size={20} />, <Clock size={20} />]
 
+  // --- Fetch events ---
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true)
@@ -115,11 +114,13 @@ export const Events = () => {
     fetchEvents()
   }, [])
 
+  // --- Live timer update every second ---
   useEffect(() => {
     const interval = setInterval(() => setEvents((prev) => [...prev]), 1000)
     return () => clearInterval(interval)
   }, [])
 
+  // --- GSAP animations ---
   useGSAP(() => {
     gsap.from(titleRef.current, {
       y: 50,
@@ -149,10 +150,13 @@ export const Events = () => {
     }
   }, { scope: containerRef })
 
+  // --- Sorted events based on icon ---
   const sortedEvents = [...events]
   if (iconIndex === 1) {
+    // Clock → sort by start time ascending
     sortedEvents.sort((a, b) => new Date(a.scheduled_start_time).getTime() - new Date(b.scheduled_start_time).getTime())
   } else {
+    // ClipboardClock → newest first
     sortedEvents.reverse()
   }
 
@@ -209,10 +213,9 @@ export const Events = () => {
                       <span className="text-xs text-gray-400">{relativeTime}</span>
                     </div>
 
-                    {/* 🔹 FIXED IMAGE URL */}
-                    {event.image && event.guild_id && (
+                    {event.image && (
                       <img
-                        src={`https://cdn.discordapp.com/guild-events/${event.guild_id}/${event.id}.png?size=1024`}
+                        src={`https://cdn.discordapp.com/guild-events/${event.id}/${event.image}.png?size=1024`}
                         alt={event.name}
                         className="w-full h-48 object-cover rounded-lg mb-4"
                         loading="lazy"
@@ -308,10 +311,9 @@ export const Events = () => {
                 <span className="text-xs text-gray-400">{relativeTime}</span>
               </div>
 
-              {/* 🔹 FIXED IMAGE URL */}
-              {selectedEvent.image && selectedEvent.guild_id && (
+              {selectedEvent.image && (
                 <img
-                  src={`https://cdn.discordapp.com/guild-events/${selectedEvent.guild_id}/${selectedEvent.id}.png?size=1024`}
+                  src={`https://cdn.discordapp.com/guild-events/${selectedEvent.id}/${selectedEvent.image}.png?size=1024`}
                   alt={selectedEvent.name}
                   className="w-full h-64 object-cover rounded-lg mb-4"
                 />
@@ -333,6 +335,7 @@ export const Events = () => {
                 </div>
               )}
 
+              {/* Discord Link + Interested in Modal */}
               <div className="flex flex-col gap-2 text-gta-light text-sm">
                 <div className="flex items-center gap-2">
                   <CalendarDays size={16} />
@@ -413,10 +416,6 @@ export const Events = () => {
           </div>
         </div>
       )}
-
-      {/* Footer
-      <Footer /> */}
-
     </>
   )
 }
