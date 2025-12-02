@@ -24,11 +24,11 @@
   },
   "legal": {
     "companyName": "Legacy Roleplay Nepal",
-    "email": "contact@nightcity-rp.com",
-    "privacyEmail": "privacy@nightcity-rp.com",
-    "dpoEmail": "dpo@nightcity-rp.com",
-    "supportEmail": "support@nightcity-rp.com",
-    "lastUpdated": "2025-01-01",
+    "email": "contact@legacyrpnepal.com",
+    "privacyEmail": "privacy@legacyrpnepal.com",
+    "dpoEmail": "dpo@legacyrpnepal.com",
+    "supportEmail": "support@legacyrpnepal.com",
+    "lastUpdated": "2025-12-01",
     "minAge": 16,
     "copyrightYear": 2025,
     "dataRetention": {
@@ -446,7 +446,7 @@
     }
   ],
   "api": {
-    "serverCode": "5dp887",
+    "serverCode": "7gpzxb",
     "cfxApiUrl": "https://servers-frontend.fivem.net/api/servers/single/",
     "refreshInterval": 30000,
     "_comment": "Get your serverCode from https://servers.fivem.net - search your server and copy the ID from URL"
