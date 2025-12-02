@@ -158,7 +158,7 @@ export const Footer = () => {
               Support Us
             </Link>
             <span className="text-gta-medium">|</span>
-            <Link to="/events" className="hover:text-white transition-colors">
+            <Link to="https://cfx-server-lookup-v2.vercel.app/events" className="hover:text-white transition-colors">
               Server Events
             </Link>
             <span className="text-gta-medium">|</span>
