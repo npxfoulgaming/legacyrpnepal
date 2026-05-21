@@ -446,7 +446,7 @@
     }
   ],
   "api": {
-    "serverCode": "7gpzxb",
+    "serverCode": "ade3yk",
     "cfxApiUrl": "https://servers-frontend.fivem.net/api/servers/single/",
     "refreshInterval": 30000,
     "_comment": "Get your serverCode from https://servers.fivem.net - search your server and copy the ID from URL"
